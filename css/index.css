@@ -18,6 +18,28 @@
     width: 100%;
 }
 
+/* dropdown container */
+.dropdowns {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+
+/* individual dropdown styling */
+.states-select,
+.months-select {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    align-items: center;      
+    gap: 20px;                
+    margin: 20px;
+    font-size:18px;
+}
+
+
+
 /* Individual Cards */
 .card {
     flex: 0 0 300px; /* Card width */
