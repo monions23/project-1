@@ -1,0 +1,65 @@
+/* Main Container */
+.slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+/* Slider (Horizontal Scroll) */
+.slider {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Individual Cards */
+.card {
+    flex: 0 0 300px; /* Card width */
+    flex-direction: column;
+    height: auto;
+    background: #ffffff;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: start;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.card .produce-image {
+    aspect-ratio: 4 / 3; 
+    width: 100%;
+    object-fit: cover;
+}
+
+
+/* Navigation Buttons */
+button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.prev-btn { 
+    left: 10px;
+}
+.next-btn { 
+    right: 10px; 
+}
