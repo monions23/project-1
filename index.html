@@ -14,41 +14,45 @@
     <body>
         <div class="slider-container">
             <button class="prev-btn" aria-label="Previous"><i class="fa-solid fa-angle-left"></i></button>
+            
+            
             <div class="slider">
-                <div class="card">
-                    <img class="produce-image" src="assets/apples.jpg">
-                    <div class="card-text">
-                        <h1 class="produce-title">Apples</h1>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="produce-image" src="assets/oranges.jpg">
-                    <div class="card-text">
-                        <h1 class="produce-title">Oranges</h1>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="produce-image" src="assets/lemons.jpg">
-                    <div class="card-text">
-                        <h1 class="produce-title">Lemons</h1>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="produce-image" src="assets/spinach.jpg">
-                    <div class="card-text">
-                        <h1 class="produce-title">Spinach</h1>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="produce-image" src="assets/onions.jpg">
-                    <div class="card-text">
-                        <h1 class="produce-title">Onions</h1>
-                    </div>
-                </div>
+                <button class="card" data-title="Apples" data-image="assets/apples.jpg">
+                    <img class="produce-image" src="assets/apples.jpg" alt="Apples">
+                    <div class="card-text"><h1>Apples</h1></div>
+                </button>
+
+                <button class="card" data-title="Oranges" data-image="assets/oranges.jpg">
+                    <img class="produce-image" src="assets/oranges.jpg" alt="Oranges">
+                    <div class="card-text"><h1>Oranges</h1></div>
+                </button>
+
+                <button class="card" data-title="Lemons" data-image="assets/lemons.jpg">
+                    <img class="produce-image" src="assets/lemons.jpg" alt="Lemons">
+                    <div class="card-text"><h1>Lemons</h1></div>
+                </button>
+
+                <button class="card" data-title="Spinach" data-image="assets/spinach.jpg">
+                    <img class="produce-image" src="assets/spinach.jpg" alt="Spinach">
+                    <div class="card-text"><h1>Spinach</h1></div>
+                </button>
+
+                <button class="card" data-title="Onions" data-image="assets/onions.jpg">
+                    <img class="produce-image" src="assets/onions.jpg" alt="Onions">
+                    <div class="card-text"><h1>Onions</h1></div>
+                </button>
             </div>
-            <button class="next-btn" aria-label="Next"><i class="fa-solid fa-angle-right"></i></button>
+
+            <button class="next-btn"><i class="fa-solid fa-angle-right"></i></button>
         </div>
 
+        <!-- modal -->
+        <dialog id="produceModal" class="modal">
+            <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            <img id="modalImage" class="modal-image">
+            <h2 id="modalTitle"></h2>
+        </dialog>
+
         <script src="js/index.js"></script>
-    </body>
-</html>
+        </body>
+        </html>    
