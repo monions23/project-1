@@ -39,8 +39,13 @@
 }
 
 
-
 /* Individual Cards */
+
+button {
+    padding: 0;
+    border: none;
+}
+
 .card {
     flex: 0 0 300px; /* Card width */
     flex-direction: column;
@@ -117,4 +122,36 @@
   border: none;
   background: white;
   cursor: pointer;
+}
+
+/* Recipe Grid */
+
+.recipe-heading {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 1vw;
+    row-gap: 2vh;
+}
+
+.card.recipe{
+    grid-column: span 1;
+}
+
+@media screen and (max-width: 650px) {
+    .card.recipe{
+        grid-column: span 2;
+    }  
+}
+
+@media screen and (max-width: 350px) {
+    .card.recipe{
+        grid-column: span 4;
+    }  
 }
