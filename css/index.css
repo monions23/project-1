@@ -71,6 +71,7 @@ button {
     object-fit: cover;
 }
 
+
 .card-text {
   padding: 12px;
   text-align: center;
@@ -142,8 +143,23 @@ button {
     row-gap: 2vh;
 }
 
-.card.recipe{
+.card.recipe {
     grid-column: span 1;
+    grid-row: span 1;
+}
+
+.recipe-image {
+    aspect-ratio: 4 / 3; 
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.recipe-text {
+  font-size: 0.8rem;
+  line-height: 2rem;
+  padding: 12px;
+  text-align: center;
 }
 
 @media screen and (max-width: 650px) {
