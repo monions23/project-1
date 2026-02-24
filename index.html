@@ -15,7 +15,7 @@
     <div class="dropdowns">
         <div class="states-select">
             <label for="states-select">Select a state:</label>
-        <select name="states" id="states-select">
+        <select name="states" id="states-select" onchange="selectProduce()">
 	        <option value="AL">Alabama</option>
 	        <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -71,7 +71,7 @@
         </div>
         <div class="seasons-select">
         <label for="seasons-select">Select a season:</label>
-        <select name="seasons" id="seasons-select">
+        <select name="seasons" id="seasons-select" onchange="selectProduce()">
             <option value="spring">Spring</option>
             <option value="summer">Summer</option>
             <option value="fall">Fall</option>
