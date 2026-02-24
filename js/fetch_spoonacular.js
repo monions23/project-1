@@ -11,11 +11,47 @@ async function fetchIngredients(produceArr, targetContainer) {
         var encodedProduceStr = encodeURIComponent(produceStr);
         var url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodedProduceStr}&\
         number=12&ranking=1`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'x-api-key': apiKey2,
+                'Content-Type': 'application/json'
+            }
+        })
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`)
+        }
+
+        var data = await response.json()
+            .then(
+                data => {
+                    var recipeIDs = [];
+                    console.log(data);
+                    data.forEach(recipe => {
+                        recipeIDs.push(recipe.id);
+                    })
+                    //displayProduceCards(data, produceArr);
+                    fetchRecipes(data, recipeIDs);
+                }
+        );
+    }
+    catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+async function fetchRecipes(data, recipeIDs, targetContainer) {
+    /* Fetch recipes and output cards */
+    try {
+        console.log(recipeIDs);
+        let recipeIDsStr = recipeIDs.join(",");
+        console.log(recipeIDsStr);
+        var url = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeIDsStr}`;
 
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'x-api-key': apiKey1,
+                'x-api-key': apiKey2,
                 'Content-Type': 'application/json'
             }
         })
@@ -33,6 +69,8 @@ async function fetchIngredients(produceArr, targetContainer) {
                     })
                     //displayProduceCards(data, produceArr);
                     fetchRecipes(recipeIDs, targetContainer);
+                    console.log(data);
+                    displayRecipeCards(data);
                 }
         );
     }
@@ -41,13 +79,7 @@ async function fetchIngredients(produceArr, targetContainer) {
     }
 }
 
-async function fetchRecipes(recipeIDs, targetContainer) {
-    /* Fetch recipes and output cards */
-    try {
-        console.log(recipeIDs);
-        let recipeIDsStr = recipeIDs.join(",");
-        console.log(recipeIDsStr);
-        var url = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeIDsStr}`;
+function displayRecipeCards(cardsData) {
 
         const response = await fetch(url, {
             method: 'GET',

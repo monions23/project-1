@@ -18,6 +18,13 @@ slider.querySelectorAll(".produce-card").forEach(card => card.remove());
 
 // CHANGE: clear the page recipe grid only (optional but recommended)
 document.getElementById("pageRecipeGrid").innerHTML = "";
+  // Select all elements that match the CSS selector
+  const cardElements = document.querySelectorAll(".card");
+
+  // Iterate over the resulting NodeList and remove each element
+  for (const card of cardElements) {
+    card.remove();
+  }
 
   const stateElement = document.getElementById("states-select");
   const seasonElement = document.getElementById("seasons-select");
@@ -95,4 +102,3 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!inside) modal.close();
   });
 });
-
