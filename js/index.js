@@ -40,3 +40,32 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// ali's code:
+let data = null;
+
+fetch("data.json")
+  .then(response => response.json())
+  .then(json => {
+    data = json;
+    console.log("Data loaded:", data);
+  })
+  .catch(err => console.error("Failed to load data.json", err));
+  
+function selectProduce() {
+
+  const stateElement = document.getElementById("states-select");
+  const seasonElement = document.getElementById("seasons-select");
+
+  const stateChoice = stateElement.value;
+  const seasonChoice = seasonElement.value;
+
+  const region = data.regions.find(r =>
+    r.states.includes(stateChoice)
+  );
+
+  if (!region) return [];
+
+  return region.seasons[seasonChoice] || [];
+
+
+};
