@@ -15,6 +15,7 @@ function selectProduce() {
   // CHANGE: only remove produce cards in the slider
   const slider = document.querySelector(".slider");
   document.querySelectorAll(".recipe-card").forEach(card => card.remove());
+  document.querySelectorAll(".produce-card").forEach(card => card.remove());
 
   // // CHANGE: clear the page recipe grid only (optional but recommended)
   // document.getElementById("pageRecipeGrid").innerHTML = "";
