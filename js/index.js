@@ -12,6 +12,12 @@ fetch("data.json")
 
 function selectProduce() {
 
+  // CHANGE: only remove produce cards in the slider
+const slider = document.querySelector(".slider");
+slider.querySelectorAll(".produce-card").forEach(card => card.remove());
+
+// CHANGE: clear the page recipe grid only (optional but recommended)
+document.getElementById("pageRecipeGrid").innerHTML = "";
   // Select all elements that match the CSS selector
   const cardElements = document.querySelectorAll(".card");
 
@@ -34,7 +40,7 @@ function selectProduce() {
 
   console.log(region.seasons[seasonChoice] || [])
 
-  fetchIngredients(region.seasons[seasonChoice] || []);
+  fetchIngredients(region.seasons[seasonChoice] || [], document.querySelector(".recipe-grid"));
   return region.seasons[seasonChoice] || [];
 
 
@@ -51,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalTitle = document.getElementById("modalTitle");
     const closeBtn = document.querySelector(".modal-close");
 
-    const cardWidth = document.querySelector(".card").offsetWidth + 16; // Include margin
+    const cardWidth = document.querySelector(".produce-card").offsetWidth + 16; // Include margin
 
     nextBtn.addEventListener("click", () => {
         slider.scrollBy({left: cardWidth, behavior: "smooth"});
@@ -61,13 +67,27 @@ document.addEventListener("DOMContentLoaded", function () {
         slider.scrollBy({ left: -cardWidth, behavior: "smooth" });
     });
 
-    document.querySelectorAll(".card").forEach(card => {
-    card.addEventListener("click", () => {
-      modalTitle.textContent = card.dataset.title;
-      modalImage.src = card.dataset.image;
-      modal.showModal();
-    });
+    const modalRecipeGrid = document.getElementById("modalRecipeGrid");
+
+  // CHANGE: handle clicks only inside the produce slider
+  slider.addEventListener("click", async (e) => {
+    const card = e.target.closest(".produce-card");
+    if (!card) return; // not a produce card
+
+    const produceName = card.dataset.title;
+    const img = card.dataset.image;
+
+    modalTitle.textContent = produceName;
+    modalImage.src = img;
+    modalImage.alt = produceName;
+
+    modal.showModal();
+
+    // CHANGE: load recipes into modal grid for the clicked produce
+    modalRecipeGrid.innerHTML = "<p>Loading recipes...</p>";
+    await fetchIngredients([produceName], modalRecipeGrid);
   });
+ 
 
   closeBtn.addEventListener("click", () => modal.close());
 

@@ -85,27 +85,27 @@
             
             
             <div class="slider">
-                <button class="card" data-title="Apples" data-image="assets/apples.jpg">
+                <button class="produce-card" data-title="Apples" data-image="assets/apples.jpg">
                     <img class="produce-image" src="assets/apples.jpg" alt="Apples">
                     <div class="card-text"><h1>Apples</h1></div>
                 </button>
 
-                <button class="card" data-title="Oranges" data-image="assets/oranges.jpg">
+                <button class="produce-card" data-title="Oranges" data-image="assets/oranges.jpg">
                     <img class="produce-image" src="assets/oranges.jpg" alt="Oranges">
                     <div class="card-text"><h1>Oranges</h1></div>
                 </button>
 
-                <button class="card" data-title="Lemons" data-image="assets/lemons.jpg">
+                <button class="produce-card" data-title="Lemons" data-image="assets/lemons.jpg">
                     <img class="produce-image" src="assets/lemons.jpg" alt="Lemons">
                     <div class="card-text"><h1>Lemons</h1></div>
                 </button>
 
-                <button class="card" data-title="Spinach" data-image="assets/spinach.jpg">
+                <button class="produce-card" data-title="Spinach" data-image="assets/spinach.jpg">
                     <img class="produce-image" src="assets/spinach.jpg" alt="Spinach">
                     <div class="card-text"><h1>Spinach</h1></div>
                 </button>
 
-                <button class="card" data-title="Onions" data-image="assets/onions.jpg">
+                <button class="produce-card" data-title="Onions" data-image="assets/onions.jpg">
                     <img class="produce-image" src="assets/onions.jpg" alt="Onions">
                     <div class="card-text"><h1>Onions</h1></div>
                 </button>
@@ -117,16 +117,21 @@
         <!-- modal -->
         <dialog id="produceModal" class="modal">
             <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            
             <img id="modalImage" class="modal-image">
             <h2 id="modalTitle"></h2>
+
+            <h3 class="modal-subheading>Recipes"></h3>
+            <div id="modalRecipeGrid" class="recipe-grid"></div>
         </dialog>
 
         <h1 class="recipe-heading">Suggested Recipes</h1>
+    
         
         <!-- Recipes added via JavaScript-->
-        <div class="recipe-grid"></div>
+        <div class="recipe-grid" id="pageRecipeGrid"></div>
 
         <script src="js/index.js"></script>
         <script src="js/fetch_spoonacular.js"></script>
         </body>
-</html>    
+</html>
