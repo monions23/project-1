@@ -2,13 +2,16 @@ const apiKey1 = '2f828b7f1c5e4eaf98fe8c55fd825aa0';
 const apiKey2 = 'ec189335398d41cca8df74580c3d7f76';
 const apiKey3 = '0d22fdea05784a548001de5aa76848e8';
 
-const url = 'https://api.spoonacular.com/recipes/complexSearch?includeIngredients=leeks&fill\
-            Ingredients=true&addRecipeInformation=true&addRecipeInstructions=true&number=12';
-
 const cardContainer = document.querySelector('.recipe-grid');
 
-async function fetchRecipes() {
+async function fetchIngredients(produceArr, targetContainer) {
     try {
+        /* fetch produce and output cards */
+        var produceStr = produceArr.join(",")
+        var encodedProduceStr = encodeURIComponent(produceStr);
+        var url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodedProduceStr}&\
+        number=12&ranking=1`;
+
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -23,8 +26,13 @@ async function fetchRecipes() {
         var data = await response.json()
             .then(
                 data => {
-                    console.log(data.results);
-                    displayCards(data.results);
+                    var recipeIDs = [];
+                    console.log(data);
+                    data.forEach(recipe => {
+                        recipeIDs.push(recipe.id);
+                    })
+                    //displayProduceCards(data, produceArr);
+                    fetchRecipes(recipeIDs, targetContainer);
                 }
         );
     }
@@ -33,32 +41,94 @@ async function fetchRecipes() {
     }
 }
 
-function displayCards(cardsData) {
+async function fetchRecipes(recipeIDs, targetContainer) {
+    /* Fetch recipes and output cards */
+    try {
+        console.log(recipeIDs);
+        let recipeIDsStr = recipeIDs.join(",");
+        console.log(recipeIDsStr);
+        var url = `https://api.spoonacular.com/recipes/informationBulk?ids=${recipeIDsStr}`;
 
-  cardsData.forEach(cardData => {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'x-api-key': apiKey1,
+                'Content-Type': 'application/json'
+            }
+        })
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`)
+        }
+
+        var data = await response.json()
+            .then(
+                data => {
+                    console.log(data);
+                    displayRecipeCards(data, targetContainer);
+                }
+        );
+    }
+    catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+// function displayProduceCards(produceData, produceArr) {
+
+
+//     // Create card elements
+//     var card = document.createElement('div');
+//     var recipeImage = document.createElement('img');
+//     var recipeTitle = document.createElement('div');
+
+//     // Add classes for styling
+//     card.classList.add('card');
+//     card.classList.add('recipe');
+//     recipeImage.classList.add('recipe-image');
+//     recipeTitle.classList.add('recipe-text');
+
+//     // Set content dynamically
+//     recipeImage.src = produceData.image;
+//     recipeImage.alt = produceData.title;
+//     recipeTitle.textContent = produceData.title;
+
+//     // Append elements to the card, and the card to the container
+//     card.appendChild(recipeImage);
+//     card.appendChild(recipeTitle);
+//     cardContainer.appendChild(card);
+// }
+
+function displayRecipeCards(cardsData, targetContainer) {
+    targetContainer.innerHTML = "";
+
+    cardsData.forEach(cardData => {
 
     // Create card elements
-    var card = document.createElement('div');
-    var recipeImage = document.createElement('img');
-    var recipeTitle = document.createElement('div');
+    const card = document.createElement("button");
+    card.type = "button";
+    card.classList.add("recipe-card");
 
-    // Add classes for styling
-    card.classList.add('card');
-    card.classList.add('recipe');
-    recipeImage.classList.add('recipe-image');
-    recipeTitle.classList.add('recipe-text');
-
-    // Set content dynamically
+    const recipeImage = document.createElement("img");
     recipeImage.src = cardData.image;
     recipeImage.alt = cardData.title;
+
+    const recipeTitle = document.createElement("div");
+    recipeTitle.classList.add("recipe-text");
     recipeTitle.textContent = cardData.title;
+
+    // Add classes for styling
+    // Set content dynamically
+
 
     // Append elements to the card, and the card to the container
     card.appendChild(recipeImage);
     card.appendChild(recipeTitle);
     cardContainer.appendChild(card);
+
+    //clickable recipe cards ?
+    const link = cardData.sourceUrl || cardData.spoonacularSourceUrl;
+    if (link) {
+      card.addEventListener("click", () => window.open(link, "_blank"));
+    }
   })
 }
-
-
-fetchRecipes();
