@@ -141,11 +141,26 @@ button {
     grid-template-columns: repeat(4, 1fr);
     column-gap: 1vw;
     row-gap: 2vh;
+    height: auto;
 }
 
-.card.recipe {
+.recipe-card {
     grid-column: span 1;
     grid-row: span 1;
+    flex: 0 0 300px; /* Card width */
+    flex-direction: column;
+    height: auto;
+    background: #ffffff;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: start;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .recipe-image {
@@ -163,13 +178,13 @@ button {
 }
 
 @media screen and (max-width: 650px) {
-    .card.recipe{
+    .recipe-card{
         grid-column: span 2;
     }  
 }
 
 @media screen and (max-width: 350px) {
-    .card.recipe{
+    .recipe-card {
         grid-column: span 4;
     }  
 }
