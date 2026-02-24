@@ -21,7 +21,7 @@
     <div class="dropdowns">
         <div class="states-select">
             <label for="states-select">Select a state:</label>
-        <select name="states" id="states-select">
+        <select name="states" id="states-select" onchange="selectProduce()">
 	        <option value="AL">Alabama</option>
 	        <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -75,21 +75,13 @@
             <option value="WY">Wyoming</option>
         </select>
         </div>
-        <div class="months-select">
-        <label for="months-select">Select a month:</label>
-        <select name="months" id="months-select">
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
+        <div class="seasons-select">
+        <label for="seasons-select">Select a season:</label>
+        <select name="seasons" id="seasons-select" onchange="selectProduce()">
+            <option value="spring">Spring</option>
+            <option value="summer">Summer</option>
+            <option value="fall">Fall</option>
+            <option value="winter">Winter</option>
         </select>
         </div>
         <button class="btn-search">Search</button>
@@ -100,27 +92,27 @@
             
             
             <div class="slider">
-                <button class="card" data-title="Apples" data-image="assets/apples.jpg">
+                <button class="produce-card" data-title="Apples" data-image="assets/apples.jpg">
                     <img class="produce-image" src="assets/apples.jpg" alt="Apples">
                     <div class="card-text"><h1>Apples</h1></div>
                 </button>
 
-                <button class="card" data-title="Oranges" data-image="assets/oranges.jpg">
+                <button class="produce-card" data-title="Oranges" data-image="assets/oranges.jpg">
                     <img class="produce-image" src="assets/oranges.jpg" alt="Oranges">
                     <div class="card-text"><h1>Oranges</h1></div>
                 </button>
 
-                <button class="card" data-title="Lemons" data-image="assets/lemons.jpg">
+                <button class="produce-card" data-title="Lemons" data-image="assets/lemons.jpg">
                     <img class="produce-image" src="assets/lemons.jpg" alt="Lemons">
                     <div class="card-text"><h1>Lemons</h1></div>
                 </button>
 
-                <button class="card" data-title="Spinach" data-image="assets/spinach.jpg">
+                <button class="produce-card" data-title="Spinach" data-image="assets/spinach.jpg">
                     <img class="produce-image" src="assets/spinach.jpg" alt="Spinach">
                     <div class="card-text"><h1>Spinach</h1></div>
                 </button>
 
-                <button class="card" data-title="Onions" data-image="assets/onions.jpg">
+                <button class="produce-card" data-title="Onions" data-image="assets/onions.jpg">
                     <img class="produce-image" src="assets/onions.jpg" alt="Onions">
                     <div class="card-text"><h1>Onions</h1></div>
                 </button>
@@ -132,11 +124,21 @@
         <!-- modal -->
         <dialog id="produceModal" class="modal">
             <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            
             <img id="modalImage" class="modal-image">
             <h2 id="modalTitle"></h2>
-        
+
+            <h3 class="modal-subheading>Recipes"></h3>
+            <div id="modalRecipeGrid"></div>
         </dialog>
 
+        <h1 class="recipe-heading">Suggested Recipes</h1>
+    
+        
+        <!-- Recipes added via JavaScript-->
+        <div class="recipe-grid" id="pageRecipeGrid"></div>
+
         <script src="js/index.js"></script>
+        <script src="js/fetch_spoonacular.js"></script>
         </body>
-        </html>    
+</html>
