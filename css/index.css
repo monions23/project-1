@@ -48,7 +48,7 @@ button {
     border: none;
 }
 
-.card {
+.produce-card {
     flex: 0 0 300px; /* Card width */
     flex-direction: column;
     height: auto;
@@ -72,8 +72,9 @@ button {
 }
 
 
-.card-text {
+.produce-text {
   padding: 12px;
+  font-size: 1.2rem;
   text-align: center;
 }
 
