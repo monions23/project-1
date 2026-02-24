@@ -1,6 +1,4 @@
-const apiKey1 = '2f828b7f1c5e4eaf98fe8c55fd825aa0';
-const apiKey2 = 'ec189335398d41cca8df74580c3d7f76';
-const apiKey3 = '0d22fdea05784a548001de5aa76848e8';
+const apiKey = 'c2d057f8c56142288780a4abc0b0b806';
 
 const cardContainer = document.querySelector('.recipe-grid');
 
@@ -14,7 +12,7 @@ async function fetchIngredients(produceArr, targetContainer) {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'x-api-key': apiKey2,
+                'x-api-key': apiKey,
                 'Content-Type': 'application/json'
             }
         })
@@ -51,7 +49,7 @@ async function fetchRecipes(data, recipeIDs, targetContainer) {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'x-api-key': apiKey2,
+                'x-api-key': apiKey,
                 'Content-Type': 'application/json'
             }
         })
@@ -105,30 +103,30 @@ function displayRecipeCards(cardsData) {
     }
 }
 
-// function displayProduceCards(produceData, produceArr) {
+function displayProduceCards(produceData, produceArr) {
 
 
-//     // Create card elements
-//     var card = document.createElement('div');
-//     var recipeImage = document.createElement('img');
-//     var recipeTitle = document.createElement('div');
+    // Create card elements
+    var card = document.createElement('div');
+    var recipeImage = document.createElement('img');
+    var recipeTitle = document.createElement('div');
 
-//     // Add classes for styling
-//     card.classList.add('card');
-//     card.classList.add('recipe');
-//     recipeImage.classList.add('recipe-image');
-//     recipeTitle.classList.add('recipe-text');
+    // Add classes for styling
+    card.classList.add('card');
+    card.classList.add('recipe');
+    recipeImage.classList.add('recipe-image');
+    recipeTitle.classList.add('recipe-text');
 
-//     // Set content dynamically
-//     recipeImage.src = produceData.image;
-//     recipeImage.alt = produceData.title;
-//     recipeTitle.textContent = produceData.title;
+    // Set content dynamically
+    recipeImage.src = produceData.image;
+    recipeImage.alt = produceData.title;
+    recipeTitle.textContent = produceData.title;
 
-//     // Append elements to the card, and the card to the container
-//     card.appendChild(recipeImage);
-//     card.appendChild(recipeTitle);
-//     cardContainer.appendChild(card);
-// }
+    // Append elements to the card, and the card to the container
+    card.appendChild(recipeImage);
+    card.appendChild(recipeTitle);
+    cardContainer.appendChild(card);
+}
 
 function displayRecipeCards(cardsData, targetContainer) {
     targetContainer.innerHTML = "";
