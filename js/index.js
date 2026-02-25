@@ -13,18 +13,18 @@ fetch("data.json")
 function selectProduce() {
 
   // CHANGE: only remove produce cards in the slider
-const slider = document.querySelector(".slider");
-slider.querySelectorAll(".produce-card").forEach(card => card.remove());
+  const slider = document.querySelector(".slider");
+  document.getElementById("pageRecipeGrid").innerHTML = "";
 
-// CHANGE: clear the page recipe grid only (optional but recommended)
-document.getElementById("pageRecipeGrid").innerHTML = "";
-  // Select all elements that match the CSS selector
-  const cardElements = document.querySelectorAll(".card");
+  // // CHANGE: clear the page recipe grid only (optional but recommended)
+  // document.getElementById("pageRecipeGrid").innerHTML = "";
+  // // Select all elements that match the CSS selector
+  // const cardElements = document.querySelectorAll(".card");
 
-  // Iterate over the resulting NodeList and remove each element
-  for (const card of cardElements) {
-    card.remove();
-  }
+  // // Iterate over the resulting NodeList and remove each element
+  // for (const card of cardElements) {
+  //   card.remove();
+  // }
 
   const stateElement = document.getElementById("states-select");
   const seasonElement = document.getElementById("seasons-select");
@@ -40,7 +40,7 @@ document.getElementById("pageRecipeGrid").innerHTML = "";
 
   console.log(region.seasons[seasonChoice] || [])
 
-  fetchIngredients(region.seasons[seasonChoice] || [], document.querySelector(".recipe-grid"));
+  fetchIngredients(region.seasons[seasonChoice] || [], document.getElementById("pageRecipeGrid"));
   return region.seasons[seasonChoice] || [];
 
 
@@ -57,6 +57,41 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalTitle = document.getElementById("modalTitle");
     const closeBtn = document.querySelector(".modal-close");
 
+    // ===== RECIPE MODAL (NEW) =====
+    const recipeModal = document.getElementById("recipeModal");
+    const recipeModalImage = document.getElementById("recipeModalImage");
+    const recipeModalTitle = document.getElementById("recipeModalTitle");
+    const recipeModalLink = document.getElementById("recipeModalLink");
+    const recipeModalClose = document.querySelector(".recipe-modal-close");
+
+    // Global so fetch_spoonacular.js can call it
+    window.openRecipeModal = function (recipeCardEl) {
+      const title = recipeCardEl.dataset.title || "Recipe";
+      const image = recipeCardEl.dataset.image || "";
+      const link = recipeCardEl.dataset.link || "#";
+
+      recipeModalTitle.textContent = title;
+      recipeModalImage.src = image;
+      recipeModalImage.alt = title;
+
+      recipeModalLink.href = link;
+      recipeModalLink.style.display = link && link !== "#" ? "inline-block" : "none";
+
+      recipeModal.showModal();
+    };
+
+    recipeModalClose.addEventListener("click", () => recipeModal.close());
+
+    recipeModal.addEventListener("click", (e) => {
+      const rect = recipeModal.getBoundingClientRect();
+      const inside =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+
+      if (!inside) recipeModal.close();
+    });
     const cardWidth = document.querySelector(".produce-card").offsetWidth + 16; // Include margin
 
     nextBtn.addEventListener("click", () => {

@@ -157,10 +157,70 @@ button {
 
 .recipe-text {
   font-size: 0.8rem;
-  line-height: 2rem;
+  line-height: 1.2rem;
   padding: 12px;
   text-align: center;
 }
+/* RECIPE MODAL*/
+.recipe-card {
+  padding: 0;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.recipe-modal {
+  border: none;
+  border-radius: 12px;
+  padding: 18px;
+  width: min(520px, 92vw);
+  text-align: center;
+  position: relative;
+}
+
+.recipe-modal::backdrop {
+  background: rgba(0,0,0,0.4);
+}
+
+.recipe-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+.recipe-modal-image {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 10px;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+.recipe-modal-title {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 12px 0;
+}
+
+.recipe-modal-link {
+  display: inline-block;
+  padding: 10px 14px;
+  background: #222;
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 
 @media screen and (max-width: 650px) {
     .card.recipe{

@@ -114,22 +114,38 @@
             <button class="next-btn"><i class="fa-solid fa-angle-right"></i></button>
         </div>
 
-        <!-- modal -->
+        <!-- produce modal -->
         <dialog id="produceModal" class="modal">
             <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
             
             <img id="modalImage" class="modal-image">
             <h2 id="modalTitle"></h2>
 
-            <h3 class="modal-subheading>Recipes"></h3>
+            <h3 class="modal-subheading">Recipes</h3>
             <div id="modalRecipeGrid" class="recipe-grid"></div>
         </dialog>
 
         <h1 class="recipe-heading">Suggested Recipes</h1>
-    
-        
-        <!-- Recipes added via JavaScript-->
         <div class="recipe-grid" id="pageRecipeGrid"></div>
+        
+        <!-- recipe modal -->
+        <dialog id="recipeModal" class="recipe-modal">
+        <button class="recipe-modal-close" aria-label="Close recipe modal">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <img id="recipeModalImage" class="recipe-modal-image" alt="">
+        <h2 id="recipeModalTitle" class="recipe-modal-title"></h2>
+
+        <a id="recipeModalLink" class="recipe-modal-link" href="#" target="_blank" rel="noopener">
+            View full recipe
+        </a>
+        </dialog>
+
+
+
+        <!-- Recipes added via JavaScript -->
+    
 
         <script src="js/index.js"></script>
         <script src="js/fetch_spoonacular.js"></script>
