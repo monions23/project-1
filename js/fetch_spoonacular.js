@@ -1,18 +1,20 @@
-const apiKey = 'c2d057f8c56142288780a4abc0b0b806';
+const apiKey = '9fc9be1b8fe042939ffdd55b8ee408c5';
 
 const cardContainer = document.querySelector('.recipe-grid');
 const produceContainer = document.querySelector('.slider');
+//storing recipes by their id 
+const recipeById = new Map();
 console.log(cardContainer);
 
 // Create card elements
+function updateProduceCount(count) {
+    const pill = document.getElementById("produceCount");
+    if (!pill) return;
 
-//info pills for recipe card 
-const content = document.createElement("div");     
-const recipeTitle = document.createElement("div"); 
-const pillRow = document.createElement("div");    
+    pill.textContent = `${count} ${count === 1 ? "item" : "items"}`;
+ }    
 
-const timePill = document.createElement("span");   
-const ingPill = document.createElement("span");  
+
 
 // ===== RECIPE MODAL =====
 const recipeModal = document.getElementById("recipeModal");
@@ -21,13 +23,39 @@ const recipeModalTitle = document.getElementById("recipeModalTitle");
 const recipeModalLink = document.getElementById("recipeModalLink");
 const recipeModalClose = document.querySelector(".recipe-modal-close");
 
+// closing modal
+if (recipeModalClose) {
+  recipeModalClose.addEventListener("click", () => {
+    recipeModal.close();
+  });
+}
+
+// Close when clicking the backdrop area (outside the modal card)
+recipeModal.addEventListener("click", (e) => {
+  const box = recipeModal.getBoundingClientRect();
+
+  const clickedInside =
+    e.clientX >= box.left &&
+    e.clientX <= box.right &&
+    e.clientY >= box.top &&
+    e.clientY <= box.bottom;
+
+  if (!clickedInside) recipeModal.close();
+});
+
 
 async function fetchIngredients(produceArr, targetContainer) {
+
+    produceContainer.innerHTML ="";
+    updateProduceCount(produceArr.length)
+    
     if (!targetContainer) targetContainer = document.getElementById("pageRecipeGrid");
     console.log('container got');
     
-    // First: display produce cards
+    // display produce cards
     displayProduceCards(produceArr);
+    
+    
 
     try {
         /* fetch produce and output cards */
@@ -153,7 +181,7 @@ async function displayProduceCards(produceArr) {
         const modalRecipeGrid = document.getElementById("modalRecipeGrid");
 
 
-        // CHANGE: handle clicks only inside the produce slider
+        //handle clicks only inside the produce slider
         slider.addEventListener("click", async (e) => {
             const card = e.target.closest(".produce-card");
             if (!card) return; // not a produce card
@@ -169,7 +197,13 @@ async function displayProduceCards(produceArr) {
 
             // load recipes into modal grid for the clicked produce
             modalRecipeGrid.innerHTML = "<p>Loading recipes...</p>";
-            await fetchIngredients([produceName], modalRecipeGrid);
+            await fetchRecipesForOneProduce(produceName, modalRecipeGrid);
+
+            const countEl = document.getElementById("modalRecipeCount");
+            if (countEl) {
+                const cards = modalRecipeGrid.querySelectorAll(".recipe-card").length;
+                countEl.textContent = `${cards} ${cards === 1 ? "recipe" : "recipes"}`;
+                }
         });
     
 
@@ -191,105 +225,244 @@ async function displayProduceCards(produceArr) {
     }
 
 }
+//fetch rcipes for display grid
+async function fetchRecipesForOneProduce(produceName, targetContainer) {
+  if (!targetContainer) return;
 
-function displayRecipeCards(cardsData, targetContainer) {
-    if (!targetContainer) return;
-    targetContainer.innerHTML = "";
+  targetContainer.innerHTML = "<p>Loading recipes...</p>";
 
-    cardsData.forEach(cardData => {
+  try {
+    const encoded = encodeURIComponent(produceName);
+    const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encoded}&number=12&ranking=1`;
 
-        // Create card elements
-        const card = document.createElement("button");
-        console.log(card);
-        const recipeImage = document.createElement("img");
-        console.log(recipeImage);
-        const recipeTitle = document.createElement("div");
-        console.log(recipeTitle);
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-api-key": apiKey,
+        "Content-Type": "application/json"
+      }
+    });
 
-        // Add classes for styling
-        card.classList.add("recipe-card");
-        recipeImage.classList.add('recipe-image');
-        recipeTitle.classList.add("recipe-text");
+    if (!res.ok) throw new Error(`Response status: ${res.status}`);
 
-        //pill layout classes
-        content.classList.add("recipe-content");
-        pillRow.classList.add("recipe-pill-row");
-        timePill.classList.add("recipe-pill");
-        ingPill.classList.add("recipe-pill");
+    const list = await res.json(); // list of {id,...}
+    const ids = list.map(r => r.id);
 
-        // Set content dynamically
-        recipeImage.src = cardData.image;
-        recipeImage.alt = cardData.title;
-        recipeTitle.textContent = cardData.title;
+    // reuse your existing bulk fetch:
+    await fetchRecipes(ids, targetContainer);
 
-        //text for pills
-        const minutes = cardData.readyInMinutes;
-        const ingCount = Array.isArray(cardData.extendedIngredients)
-            ? cardData.extendedIngredients.length
-            : 0;
-
-        timePill.textContent = minutes ? `⏱ ${minutes} min` : "⏱ —";
-        ingPill.textContent = ingCount ? `🥬 ${ingCount} ingredients` : "🥬 —";
-
-
-        //clickable recipe cards ?        
-        card.dataset.title = cardData.title;
-        card.dataset.image = cardData.image;
-        card.dataset.link = cardData.sourceUrl || cardData.spoonacularSourceUrl || "";
-        card.dataset.id = cardData.id;
-                
-        // title and pills 
-        pillRow.appendChild(timePill);
-        pillRow.appendChild(ingPill);
-        content.appendChild(recipeTitle);
-        content.appendChild(pillRow);
-
-        
-        // Append elements to the card, and the card to the container
-        card.appendChild(recipeImage);
-        card.appendChild(content);
-        targetContainer.appendChild(card);
-
-        // const link = cardData.sourceUrl || cardData.spoonacularSourceUrl;
-        // if (link) {
-        card.addEventListener("click", () => window.openRecipeModal(card));
-
-        const recipePill = document.getElementById("recipeCount");
-        if (recipePill) {
-            recipePill.textContent = `${cardsData.length} ${cardsData.length === 1 ? "recipe" : "recipes"}`;
-        }
-        //}
-    })
+  } catch (err) {
+    console.error(err);
+    targetContainer.innerHTML = "<p>Could not load recipes.</p>";
+  }
 }
 
-// Global so fetch_spoonacular.js can call it
+function displayRecipeCards(cardsData, targetContainer) {
+  if (!targetContainer) return;
+  targetContainer.innerHTML = "";
+
+  cardsData.forEach(cardData => {
+
+
+
+    // Create card elements
+    const card = document.createElement("button");
+    const recipeImage = document.createElement("img");
+
+    const content = document.createElement("div");
+    const recipeTitle = document.createElement("div");
+    const pillRow = document.createElement("div");
+
+    const timePill = document.createElement("span");
+    const ingPill = document.createElement("span");
+
+    // Add classes for styling
+    card.classList.add("recipe-card");
+    recipeImage.classList.add("recipe-image");
+    recipeTitle.classList.add("recipe-text");
+
+    // pill layout classes
+    content.classList.add("recipe-content");
+    pillRow.classList.add("recipe-pill-row");
+    timePill.classList.add("recipe-pill");
+    ingPill.classList.add("recipe-pill");
+
+    // Set content dynamically
+    recipeImage.src = cardData.image;
+    recipeImage.alt = cardData.title;
+    recipeTitle.textContent = cardData.title;
+
+    // text for pills
+    const minutes = cardData.readyInMinutes;
+    const ingCount = Array.isArray(cardData.extendedIngredients)
+      ? cardData.extendedIngredients.length
+      : 0;
+
+    timePill.textContent = minutes ? `⏱ ${minutes} min` : "⏱ —";
+    ingPill.textContent = ingCount ? `🥬 ${ingCount} ingredients` : "🥬 —";
+
+    // clickable recipe cards
+    card.dataset.title = cardData.title;
+    card.dataset.image = cardData.image;
+    card.dataset.link = cardData.sourceUrl || cardData.spoonacularSourceUrl || "";
+    card.dataset.id = cardData.id;
+
+
+    // Save full recipe data so modal can render without refetch
+    recipeById.set(String(cardData.id), cardData);
+
+    // title and pills
+    pillRow.appendChild(timePill);
+    pillRow.appendChild(ingPill);
+    content.appendChild(recipeTitle);
+    content.appendChild(pillRow);
+
+    // Append elements to the card, and the card to the container
+    card.appendChild(recipeImage);
+    card.appendChild(content);
+    targetContainer.appendChild(card);
+
+    card.addEventListener("click", () => window.openRecipeModal(card));
+  });
+
+  const recipePill = document.getElementById("recipeCount");
+  if (recipePill) {
+    recipePill.textContent = `${cardsData.length} ${cardsData.length === 1 ? "recipe" : "recipes"}`;
+  }
+}
+// Global call
 window.openRecipeModal = function (recipeCardEl) {
-      const title = recipeCardEl.dataset.title || "Recipe";
-      const image = recipeCardEl.dataset.image || "";
-      const link = recipeCardEl.dataset.link || "#";
 
-      recipeModalTitle.textContent = title;
-      recipeModalImage.src = image;
-      recipeModalImage.alt = title;
+  //basic info from the clicked card
+  const id = recipeCardEl.dataset.id;
+  const recipe = recipeById.get(String(id)); // look up full recipe object
 
-      recipeModalLink.href = link;
-      recipeModalLink.style.display = link && link !== "#" ? "inline-block" : "none";
+  if (!recipe) {
+    console.warn("Recipe not found in recipeById map");
+    return;
+  }
 
-      recipeModal.showModal();
-    };
+  //title + image
+  recipeModalTitle.textContent = recipe.title || "Recipe";
+  recipeModalImage.src = recipe.image || "";
+  recipeModalImage.alt = recipe.title || "Recipe";
 
-    recipeModalClose.addEventListener("click", () => recipeModal.close());
+  //link
+  const link = recipe.sourceUrl || recipe.spoonacularSourceUrl || "#";
+  recipeModalLink.href = link;
+  recipeModalLink.style.display =
+    link && link !== "#" ? "inline-block" : "none";
 
-    recipeModal.addEventListener("click", (e) => {
-      const rect = recipeModal.getBoundingClientRect();
-      const inside =
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom;
+  // modal element
+  const timeEl = document.getElementById("recipeModalTime");
+  const servingsEl = document.getElementById("recipeModalServings");
+  const ingListEl = document.getElementById("recipeModalIngredients");
+  const stepsEl = document.getElementById("recipeModalSteps");
+  const descEl = document.getElementById("recipeModalDesc");
 
-      if (!inside) recipeModal.close();
-});
+  //clear old content
+  if (ingListEl) ingListEl.innerHTML = "";
+  if (stepsEl) stepsEl.innerHTML = "";
+  if (descEl) {
+    descEl.textContent = "";
+    descEl.style.display = "none";
+  }
+
+  // time pill
+  if (timeEl) {
+    const minutes = recipe.readyInMinutes;
+    timeEl.textContent = minutes ? `⏱ ${minutes} min` : "⏱ —";
+    timeEl.style.display = "inline-flex";
+  }
+
+  //Servings
+  if (servingsEl) {
+    const servings = recipe.servings;
+    if (servings) {
+      servingsEl.textContent = `👥 ${servings} servings`;
+      servingsEl.style.display = "inline-flex";
+    } else {
+      servingsEl.style.display = "none";
+    }
+  }
+
+  //description
+  if (descEl && recipe.summary) {
+    // remove HTML tags from API text
+    const cleanText = recipe.summary.replace(/<[^>]*>/g, "");
+    descEl.textContent = cleanText;
+    descEl.style.display = "block";
+  }
+
+  //  ing list
+  if (ingListEl) {
+    const ingredients = recipe.extendedIngredients || [];
+
+    if (ingredients.length === 0) {
+      ingListEl.innerHTML = "<li>No ingredients listed.</li>";
+
+    //bullet points  
+    } else {
+      ingredients.forEach(item => {
+        const li = document.createElement("li");
+
+        const dot = document.createElement("span");
+        dot.className = "recipe-modal-dot";
+
+        const text = document.createElement("span");
+        text.textContent = item.original;
+
+        li.appendChild(dot);
+        li.appendChild(text);
+
+        ingListEl.appendChild(li);
+        });
+    }
+  }
+
+  if (stepsEl) {
+
+    let steps = [];
+
+    // Spoonacular structure
+    if (
+      recipe.analyzedInstructions &&
+      recipe.analyzedInstructions.length > 0
+    ) {
+      steps = recipe.analyzedInstructions[0].steps.map(s => s.step);
+    }
+
+    // plain instructions text
+    else if (recipe.instructions) {
+      const clean = recipe.instructions.replace(/<[^>]*>/g, "");
+      steps = clean.split(". ").filter(s => s.trim().length > 0);
+    }
+
+    if (steps.length === 0) {
+      stepsEl.innerHTML = "<li>No instructions provided.</li>";
+    } else {
+      steps.forEach((text, index) => {
+        const li = document.createElement("li");
+        li.className = "recipe-modal-step";
+
+        const num = document.createElement("span");
+        num.className = "recipe-modal-step-num";
+        num.textContent = index + 1;
+
+        const stepText = document.createElement("span");
+        stepText.textContent = text;
+
+        li.appendChild(num);
+        li.appendChild(stepText);
+
+        stepsEl.appendChild(li);
+        });
+    }
+  }
+
+  recipeModal.showModal();
+};
+
 
 /* Title case function */
 function toTitleCase(str) {

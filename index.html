@@ -32,7 +32,7 @@
 <main class="page">
     <section class="ui-card">
 
-    <div id=""top-header">
+    <div id="top-header">
         <div class="logo-area">
             <b>&#127793; Harvest</b>
         </div>
@@ -103,7 +103,7 @@
             <option value="winter">Winter</option>
         </select>
         </div>
-        <button class="btn-search">Search</button>
+    
     </div>
 
     <div class="section-header">
@@ -134,19 +134,34 @@
 
 
 
+      
         <!-- produce modal -->
-        <dialog id="produceModal" class="modal">
-            <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
-            
-            <img id="modalImage" class="modal-image">
-            <h2 id="modalTitle"></h2>
+        <dialog id="produceModal" class="produce-modal">
+        <button class="modal-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
 
-            <h3 class="modal-subheading>Recipes"></h3>
-            <div id="modalRecipeGrid"></div>
+        <!-- HERO -->
+        <div class="produce-modal-hero">
+            <img id="modalImage" class="produce-modal-image" alt="">
+            <div class="produce-modal-hero-overlay"></div>
+
+            <div class="produce-modal-hero-text">
+            <h2 id="modalTitle" class="produce-modal-title"></h2>
+            <span class="produce-modal-pill" id="modalSeasonPill" style="display:none;"></span>
+            </div>
+        </div>
+
+        <!-- BODY -->
+        <div class="produce-modal-body">
+            <div class="section-header">
+            <h3 class="section-title">Recipes</h3>
+            <span class="count-pill" id="modalRecipeCount">—</span>
+            </div>
+
+            <div id="modalRecipeGrid" class="recipe-grid"></div>
+        </div>
         </dialog>
 
     
-        <div class="recipe-grid" id="pageRecipeGrid"></div>
 
         <!-- recipe modal -->
         <dialog id="recipeModal" class="recipe-modal">
