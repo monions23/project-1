@@ -4,8 +4,19 @@ const cardContainer = document.querySelector('.recipe-grid');
 const produceContainer = document.querySelector('.slider');
 console.log(cardContainer);
 
+// Create card elements
+
+//info pills for recipe card 
+const content = document.createElement("div");     
+const recipeTitle = document.createElement("div"); 
+const pillRow = document.createElement("div");    
+
+const timePill = document.createElement("span");   
+const ingPill = document.createElement("span");  
+
 async function fetchIngredients(produceArr, targetContainer) {
     if (!targetContainer) targetContainer = document.getElementById("pageRecipeGrid");
+    console.log('container got');
     
     // First: display produce cards
     displayProduceCards(produceArr);
@@ -61,9 +72,10 @@ async function fetchRecipes(recipeIDs, targetContainer) {
         }
 
         var data = await response.json()
-        //displayProduceCards(data, produceArr);
         console.log(data);
-        displayRecipeCards(data);
+
+        // Display Recipe Cards
+        displayRecipeCards(data, targetContainer);
     }
     catch (error) {
         console.error('Error fetching data:', error);
@@ -73,13 +85,15 @@ async function fetchRecipes(recipeIDs, targetContainer) {
 async function displayProduceCards(produceArr) {
 
     try{
+
+        // fetch the produce images for the produce cards
         const produceJSONResponse = await fetch('produce-images.json')
         if (!produceJSONResponse.ok) {
             throw new Error(`Response status: ${response.status}`)
         }
-
         var produceData = await produceJSONResponse.json()
 
+        // create a card for each produce item
         produceArr.forEach(produce => {
             // Create card elements
             var card = document.createElement('button');
@@ -112,18 +126,7 @@ async function displayProduceCards(produceArr) {
         const slider = document.querySelector(".slider");
         const nextBtn = document.querySelector(".next-btn");
         const prevBtn = document.querySelector(".prev-btn");
-
-        // Create card elements
-        const card = document.createElement("button");
-        const recipeImage = document.createElement("img");
-
-        //info pills for recipe card 
-        const content = document.createElement("div");     
-        const recipeTitle = document.createElement("div"); 
-        const pillRow = document.createElement("div");    
-
-        const timePill = document.createElement("span");   
-        const ingPill = document.createElement("span");    
+  
         const modal = document.getElementById("produceModal");
         const modalImage = document.getElementById("modalImage");
         const modalTitle = document.getElementById("modalTitle");
@@ -188,8 +191,11 @@ function displayRecipeCards(cardsData, targetContainer) {
 
         // Create card elements
         const card = document.createElement("button");
+        console.log(card);
         const recipeImage = document.createElement("img");
+        console.log(recipeImage);
         const recipeTitle = document.createElement("div");
+        console.log(recipeTitle);
 
         // Add classes for styling
         card.classList.add("recipe-card");
@@ -245,4 +251,11 @@ function displayRecipeCards(cardsData, targetContainer) {
         }
         //}
     })
+}
+
+/* Title case function */
+function toTitleCase(str) {
+  return str.toLowerCase().split(' ').map(function(word) {
+    return (word.charAt(0).toUpperCase() + word.slice(1));
+  }).join(' ');
 }
