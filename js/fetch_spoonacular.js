@@ -1,4 +1,4 @@
-const apiKey = '9fc9be1b8fe042939ffdd55b8ee408c5';
+const apiKey = '694a823f467f4f52aaf90ebdfe079e29';
 
 const cardContainer = document.querySelector('.recipe-grid');
 const produceContainer = document.querySelector('.slider');
