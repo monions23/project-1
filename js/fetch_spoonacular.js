@@ -160,7 +160,7 @@ async function displayProduceCards(produceArr) {
             const card = e.target.closest(".produce-card");
             if (!card) return; // not a produce card
 
-            const produceName = card.dataset.title;
+            const produceName = toTitleCase(card.dataset.title);
             const img = card.dataset.image;
 
             modalTitle.textContent = produceName;
