@@ -14,7 +14,8 @@ function selectProduce() {
 
   // CHANGE: only remove produce cards in the slider
   const slider = document.querySelector(".slider");
-  document.getElementById("pageRecipeGrid").innerHTML = "";
+  document.querySelectorAll(".recipe-card").forEach(card => card.remove());
+  document.querySelectorAll(".produce-card").forEach(card => card.remove());
 
   // // CHANGE: clear the page recipe grid only (optional but recommended)
   // document.getElementById("pageRecipeGrid").innerHTML = "";
@@ -45,95 +46,3 @@ function selectProduce() {
 
 
 };
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const slider = document.querySelector(".slider");
-    const nextBtn = document.querySelector(".next-btn");
-    const prevBtn = document.querySelector(".prev-btn");
-
-    const modal = document.getElementById("produceModal");
-    const modalImage = document.getElementById("modalImage");
-    const modalTitle = document.getElementById("modalTitle");
-    const closeBtn = document.querySelector(".modal-close");
-
-    // ===== RECIPE MODAL (NEW) =====
-    const recipeModal = document.getElementById("recipeModal");
-    const recipeModalImage = document.getElementById("recipeModalImage");
-    const recipeModalTitle = document.getElementById("recipeModalTitle");
-    const recipeModalLink = document.getElementById("recipeModalLink");
-    const recipeModalClose = document.querySelector(".recipe-modal-close");
-
-    // Global so fetch_spoonacular.js can call it
-    window.openRecipeModal = function (recipeCardEl) {
-      const title = recipeCardEl.dataset.title || "Recipe";
-      const image = recipeCardEl.dataset.image || "";
-      const link = recipeCardEl.dataset.link || "#";
-
-      recipeModalTitle.textContent = title;
-      recipeModalImage.src = image;
-      recipeModalImage.alt = title;
-
-      recipeModalLink.href = link;
-      recipeModalLink.style.display = link && link !== "#" ? "inline-block" : "none";
-
-      recipeModal.showModal();
-    };
-
-    recipeModalClose.addEventListener("click", () => recipeModal.close());
-
-    recipeModal.addEventListener("click", (e) => {
-      const rect = recipeModal.getBoundingClientRect();
-      const inside =
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom;
-
-      if (!inside) recipeModal.close();
-    });
-    const cardWidth = document.querySelector(".produce-card").offsetWidth + 16; // Include margin
-
-    nextBtn.addEventListener("click", () => {
-        slider.scrollBy({left: cardWidth, behavior: "smooth"});
-    });
-
-    prevBtn.addEventListener("click", () => {
-        slider.scrollBy({ left: -cardWidth, behavior: "smooth" });
-    });
-
-    const modalRecipeGrid = document.getElementById("modalRecipeGrid");
-
-  // CHANGE: handle clicks only inside the produce slider
-  slider.addEventListener("click", async (e) => {
-    const card = e.target.closest(".produce-card");
-    if (!card) return; // not a produce card
-
-    const produceName = card.dataset.title;
-    const img = card.dataset.image;
-
-    modalTitle.textContent = produceName;
-    modalImage.src = img;
-    modalImage.alt = produceName;
-
-    modal.showModal();
-
-    // CHANGE: load recipes into modal grid for the clicked produce
-    modalRecipeGrid.innerHTML = "<p>Loading recipes...</p>";
-    await fetchIngredients([produceName], modalRecipeGrid);
-  });
- 
-
-  closeBtn.addEventListener("click", () => modal.close());
-
-  modal.addEventListener("click", (e) => {
-    const rect = modal.getBoundingClientRect();
-    const inside =
-      e.clientX >= rect.left &&
-      e.clientX <= rect.right &&
-      e.clientY >= rect.top &&
-      e.clientY <= rect.bottom;
-
-    if (!inside) modal.close();
-  });
-});

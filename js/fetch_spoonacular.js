@@ -1,10 +1,15 @@
 const apiKey = 'c2d057f8c56142288780a4abc0b0b806';
 
-// const cardContainer = document.querySelector('.recipe-grid');
-//console.log(cardContainer);
+const cardContainer = document.querySelector('.recipe-grid');
+const produceContainer = document.querySelector('.slider');
+console.log(cardContainer);
 
 async function fetchIngredients(produceArr, targetContainer) {
     if (!targetContainer) targetContainer = document.getElementById("pageRecipeGrid");
+    
+    // First: display produce cards
+    displayProduceCards(produceArr);
+
     try {
         /* fetch produce and output cards */
         var produceStr = produceArr.join(",")
@@ -58,43 +63,55 @@ async function fetchRecipes(recipeIDs, targetContainer) {
         var data = await response.json()
         //displayProduceCards(data, produceArr);
         console.log(data);
-        displayRecipeCards(data, targetContainer);
+        displayRecipeCards(data);
     }
     catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
-// function displayProduceCards(produceData, produceArr) {
+async function displayProduceCards(produceArr) {
 
+    try{
+        const produceJSONResponse = await fetch('produce-images.json')
+        if (!produceJSONResponse.ok) {
+            throw new Error(`Response status: ${response.status}`)
+        }
 
-//     // Create card elements
-//     var card = document.createElement('div');
-//     var recipeImage = document.createElement('img');
-//     var recipeTitle = document.createElement('div');
+        var produceData = await produceJSONResponse.json()
 
-//     // Add classes for styling
-//     card.classList.add('card');
-//     card.classList.add('recipe');
-//     recipeImage.classList.add('recipe-image');
-//     recipeTitle.classList.add('recipe-text');
+        produceArr.forEach(produce => {
+            // Create card elements
+            var card = document.createElement('button');
+            var produceImage = document.createElement('img');
+            var produceTitle = document.createElement('div');
 
-//     // Set content dynamically
-//     recipeImage.src = produceData.image;
-//     recipeImage.alt = produceData.title;
-//     recipeTitle.textContent = produceData.title;
+            // Add classes for styling
+            card.classList.add('produce-card');
 
-//     // Append elements to the card, and the card to the container
-//     card.appendChild(recipeImage);
-//     card.appendChild(recipeTitle);
-//     cardContainer.appendChild(card);
-// }
+            card.setAttribute('data-title', produce);
+            card.setAttribute('data-image', produceData[produce]);
 
-function displayRecipeCards(cardsData, targetContainer) {
-    if (!targetContainer) return;
-    targetContainer.innerHTML = "";
+            produceImage.classList.add('produce-image');
+            produceTitle.classList.add('produce-text');
 
-    cardsData.forEach(cardData => {
+            // Set content dynamically
+            produceImage.src = produceData[produce];
+
+            var produceCapitalized = toTitleCase(produce);
+            produceImage.alt = produceCapitalized;
+            produceTitle.textContent = produceCapitalized;
+
+            // Append elements to the card, and the card to the container
+            card.appendChild(produceImage);
+            card.appendChild(produceTitle);
+            produceContainer.appendChild(card);
+        })
+
+        // Add modal and slider functionality
+        const slider = document.querySelector(".slider");
+        const nextBtn = document.querySelector(".next-btn");
+        const prevBtn = document.querySelector(".prev-btn");
 
         // Create card elements
         const card = document.createElement("button");
@@ -107,6 +124,72 @@ function displayRecipeCards(cardsData, targetContainer) {
 
         const timePill = document.createElement("span");   
         const ingPill = document.createElement("span");    
+        const modal = document.getElementById("produceModal");
+        const modalImage = document.getElementById("modalImage");
+        const modalTitle = document.getElementById("modalTitle");
+        const closeBtn = document.querySelector(".modal-close");
+
+        const cardWidth = document.querySelector(".produce-card").offsetWidth + 16; // Include margin
+
+        nextBtn.addEventListener("click", () => {
+            slider.scrollBy({left: cardWidth, behavior: "smooth"});
+        });
+
+        prevBtn.addEventListener("click", () => {
+            slider.scrollBy({ left: -cardWidth, behavior: "smooth" });
+        });
+
+        const modalRecipeGrid = document.getElementById("modalRecipeGrid");
+
+        // CHANGE: handle clicks only inside the produce slider
+        slider.addEventListener("click", async (e) => {
+            const card = e.target.closest(".produce-card");
+            if (!card) return; // not a produce card
+
+            const produceName = card.dataset.title;
+            const img = card.dataset.image;
+
+            modalTitle.textContent = produceName;
+            modalImage.src = img;
+            modalImage.alt = produceName;
+
+            modal.showModal();
+
+            // CHANGE: load recipes into modal grid for the clicked produce
+            //modalRecipeGrid.innerHTML = "<p>Loading recipes...</p>";
+            //await fetchIngredients([produceName], modalRecipeGrid);
+        });
+    
+
+        closeBtn.addEventListener("click", () => modal.close());
+
+        modal.addEventListener("click", (e) => {
+            const rect = modal.getBoundingClientRect();
+            const inside =
+            e.clientX >= rect.left &&
+            e.clientX <= rect.right &&
+            e.clientY >= rect.top &&
+            e.clientY <= rect.bottom;
+
+            if (!inside) modal.close();
+        });
+    }
+    catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+}
+
+function displayRecipeCards(cardsData, targetContainer) {
+    if (!targetContainer) return;
+    targetContainer.innerHTML = "";
+
+    cardsData.forEach(cardData => {
+
+        // Create card elements
+        const card = document.createElement("button");
+        const recipeImage = document.createElement("img");
+        const recipeTitle = document.createElement("div");
 
         // Add classes for styling
         card.classList.add("recipe-card");
