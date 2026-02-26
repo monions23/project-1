@@ -41,7 +41,7 @@ function selectProduce() {
 
   console.log(region.seasons[seasonChoice] || [])
 
-  fetchIngredients(region.seasons[seasonChoice] || []);
+  fetchIngredients(region.seasons[seasonChoice] || [], document.getElementById("pageRecipeGrid"));
   return region.seasons[seasonChoice] || [];
 
 

@@ -12,6 +12,25 @@
         <link rel="stylesheet" href="css/fontawesome-free-7.2.0-web/css/all.css">
     </head>
     <body>
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <div class="navbar-left">
+            🌱 <span class="brand">HarvestHelper</span>
+            </div>
+        </div>
+    </header>
+
+    <header class="hero">
+      <div class="container">
+        <h1 class="hero-title">Seasonal Recipes</h1>
+        <p class="hero-subtitle">
+            Select your state + season to see what fresh produce is available and to get recipes
+        </p>
+      </div>
+    </header>
+
+<main class="page">
+    <section class="ui-card">
 
     <div id=""top-header">
         <div class="logo-area">
@@ -86,6 +105,12 @@
         </div>
         <button class="btn-search">Search</button>
     </div>
+
+    <div class="section-header">
+        <h2 class="section-title">Available Produce</h2>
+        <span class="count-pill" id="produceCount">—</span>
+    </div> 
+
         
         <div class="slider-container">
             <button class="prev-btn" aria-label="Previous"><i class="fa-solid fa-angle-left"></i></button>
@@ -97,8 +122,19 @@
 
             <button class="next-btn"><i class="fa-solid fa-angle-right"></i></button>
         </div>
+        <div class="section-header">
+            <h2 class="section-title">Suggested Recipes</h2>
+            <span class="count-pill" id="recipeCount">0 recipes</span>
+        </div>
 
-        <!-- modal -->
+       
+        <div class="recipe-grid" id="pageRecipeGrid"></div>
+
+        </main>
+
+
+
+        <!-- produce modal -->
         <dialog id="produceModal" class="modal">
             <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
             
@@ -109,11 +145,55 @@
             <div id="modalRecipeGrid"></div>
         </dialog>
 
-        <h1 class="recipe-heading">Suggested Recipes</h1>
     
-        
-        <!-- Recipes added via JavaScript-->
         <div class="recipe-grid" id="pageRecipeGrid"></div>
+
+        <!-- recipe modal -->
+        <dialog id="recipeModal" class="recipe-modal">
+        <button class="recipe-modal-close" aria-label="Close recipe modal">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <!-- Hero image -->
+        <div class="recipe-modal-hero">
+            <img id="recipeModalImage" class="recipe-modal-image" alt="">
+            <div class="recipe-modal-hero-overlay"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="recipe-modal-body">
+            <h2 id="recipeModalTitle" class="recipe-modal-title"></h2>
+
+            <p id="recipeModalDesc" class="recipe-modal-desc" style="display:none;"></p>
+
+            <div id="recipeModalTags" class="recipe-modal-tags" style="display:none;"></div>
+
+            <div class="recipe-modal-pills">
+            <div class="recipe-pill" id="recipeModalTime" style="display:none;">⏱ —</div>
+            <div class="recipe-pill" id="recipeModalDifficulty" style="display:none;">👩‍🍳 —</div>
+            <div class="recipe-pill" id="recipeModalServings" style="display:none;">👥 —</div>
+            </div>
+
+            <a id="recipeModalLink" class="recipe-modal-link" href="#" target="_blank" rel="noopener" style="display:none;">
+            View full recipe
+            </a>
+
+            <div class="recipe-modal-section">
+            <h3 class="recipe-modal-h3">Ingredients</h3>
+            <ul id="recipeModalIngredients" class="recipe-modal-list"></ul>
+            </div>
+
+            <div class="recipe-modal-section">
+            <h3 class="recipe-modal-h3">Instructions</h3>
+            <ol id="recipeModalSteps" class="recipe-modal-steps"></ol>
+            </div>
+        </div>
+        </dialog>
+
+
+
+        <!-- Recipes added via JavaScript -->
+    
 
         <script src="js/index.js"></script>
         <script src="js/fetch_spoonacular.js"></script>

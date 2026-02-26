@@ -4,7 +4,8 @@ const cardContainer = document.querySelector('.recipe-grid');
 const produceContainer = document.querySelector('.slider');
 console.log(cardContainer);
 
-async function fetchIngredients(produceArr) {
+async function fetchIngredients(produceArr, targetContainer) {
+    if (!targetContainer) targetContainer = document.getElementById("pageRecipeGrid");
     
     // First: display produce cards
     displayProduceCards(produceArr);
@@ -33,14 +34,14 @@ async function fetchIngredients(produceArr) {
             recipeIDs.push(recipe.id);
         })
         console.log(recipeIDs)
-        fetchRecipes(recipeIDs);
+        fetchRecipes(recipeIDs, targetContainer);
     }
     catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
-async function fetchRecipes(recipeIDs) {
+async function fetchRecipes(recipeIDs, targetContainer) {
     /* Fetch recipes and output cards */
     try {
         console.log(recipeIDs);
@@ -112,6 +113,17 @@ async function displayProduceCards(produceArr) {
         const nextBtn = document.querySelector(".next-btn");
         const prevBtn = document.querySelector(".prev-btn");
 
+        // Create card elements
+        const card = document.createElement("button");
+        const recipeImage = document.createElement("img");
+
+        //info pills for recipe card 
+        const content = document.createElement("div");     
+        const recipeTitle = document.createElement("div"); 
+        const pillRow = document.createElement("div");    
+
+        const timePill = document.createElement("span");   
+        const ingPill = document.createElement("span");    
         const modal = document.getElementById("produceModal");
         const modalImage = document.getElementById("modalImage");
         const modalTitle = document.getElementById("modalTitle");
@@ -168,7 +180,9 @@ async function displayProduceCards(produceArr) {
 
 }
 
-function displayRecipeCards(cardsData) {
+function displayRecipeCards(cardsData, targetContainer) {
+    if (!targetContainer) return;
+    targetContainer.innerHTML = "";
 
     cardsData.forEach(cardData => {
 
@@ -182,28 +196,53 @@ function displayRecipeCards(cardsData) {
         recipeImage.classList.add('recipe-image');
         recipeTitle.classList.add("recipe-text");
 
+        //pill layout classes
+        content.classList.add("recipe-content");
+        pillRow.classList.add("recipe-pill-row");
+        timePill.classList.add("recipe-pill");
+        ingPill.classList.add("recipe-pill");
+
         // Set content dynamically
         recipeImage.src = cardData.image;
         recipeImage.alt = cardData.title;
         recipeTitle.textContent = cardData.title;
 
+        //text for pills
+        const minutes = cardData.readyInMinutes;
+        const ingCount = Array.isArray(cardData.extendedIngredients)
+            ? cardData.extendedIngredients.length
+            : 0;
 
+        timePill.textContent = minutes ? `⏱ ${minutes} min` : "⏱ —";
+        ingPill.textContent = ingCount ? `🥬 ${ingCount} ingredients` : "🥬 —";
+
+
+        //clickable recipe cards ?        
+        card.dataset.title = cardData.title;
+        card.dataset.image = cardData.image;
+        card.dataset.link = cardData.sourceUrl || cardData.spoonacularSourceUrl || "";
+        card.dataset.id = cardData.id;
+                
+        // title and pills 
+        pillRow.appendChild(timePill);
+        pillRow.appendChild(ingPill);
+        content.appendChild(recipeTitle);
+        content.appendChild(pillRow);
+
+        
         // Append elements to the card, and the card to the container
         card.appendChild(recipeImage);
-        card.appendChild(recipeTitle);
-        cardContainer.appendChild(card);
+        card.appendChild(content);
+        targetContainer.appendChild(card);
 
-        //clickable recipe cards ?
         // const link = cardData.sourceUrl || cardData.spoonacularSourceUrl;
         // if (link) {
-        // card.addEventListener("click", () => window.open(link, "_blank"));
+        card.addEventListener("click", () => window.openRecipeModal(card));
+
+        const recipePill = document.getElementById("recipeCount");
+        if (recipePill) {
+            recipePill.textContent = `${cardsData.length} ${cardsData.length === 1 ? "recipe" : "recipes"}`;
+        }
         //}
     })
-}
-
-/* Title case function */
-function toTitleCase(str) {
-  return str.toLowerCase().split(' ').map(function(word) {
-    return (word.charAt(0).toUpperCase() + word.slice(1));
-  }).join(' ');
 }
