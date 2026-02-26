@@ -14,6 +14,14 @@ const pillRow = document.createElement("div");
 const timePill = document.createElement("span");   
 const ingPill = document.createElement("span");  
 
+// ===== RECIPE MODAL =====
+const recipeModal = document.getElementById("recipeModal");
+const recipeModalImage = document.getElementById("recipeModalImage");
+const recipeModalTitle = document.getElementById("recipeModalTitle");
+const recipeModalLink = document.getElementById("recipeModalLink");
+const recipeModalClose = document.querySelector(".recipe-modal-close");
+
+
 async function fetchIngredients(produceArr, targetContainer) {
     if (!targetContainer) targetContainer = document.getElementById("pageRecipeGrid");
     console.log('container got');
@@ -252,22 +260,10 @@ function displayRecipeCards(cardsData, targetContainer) {
         }
         //}
     })
-
-    const cardWidth = document.querySelector(".produce-card").offsetWidth + 16; // Include margin
-
-
-    const modalRecipeGrid = document.getElementById("modalRecipeGrid");
 }
 
-// ===== RECIPE MODAL (NEW) =====
-    const recipeModal = document.getElementById("recipeModal");
-    const recipeModalImage = document.getElementById("recipeModalImage");
-    const recipeModalTitle = document.getElementById("recipeModalTitle");
-    const recipeModalLink = document.getElementById("recipeModalLink");
-    const recipeModalClose = document.querySelector(".recipe-modal-close");
-
-    // Global so fetch_spoonacular.js can call it
-    window.openRecipeModal = function (recipeCardEl) {
+// Global so fetch_spoonacular.js can call it
+window.openRecipeModal = function (recipeCardEl) {
       const title = recipeCardEl.dataset.title || "Recipe";
       const image = recipeCardEl.dataset.image || "";
       const link = recipeCardEl.dataset.link || "#";
