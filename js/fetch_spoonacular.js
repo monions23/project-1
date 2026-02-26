@@ -22,12 +22,14 @@ const recipeModalLink = document.getElementById("recipeModalLink");
 const recipeModalClose = document.querySelector(".recipe-modal-close");
 
 
-async function fetchIngredients(produceArr, targetContainer) {
+async function fetchIngredients(produceArr, targetContainer, modal = false) {
     if (!targetContainer) targetContainer = document.getElementById("pageRecipeGrid");
     console.log('container got');
     
     // First: display produce cards
-    displayProduceCards(produceArr);
+    if (!modal) {
+        displayProduceCards(produceArr);
+    }
 
     try {
         /* fetch produce and output cards */
@@ -169,7 +171,7 @@ async function displayProduceCards(produceArr) {
 
             // load recipes into modal grid for the clicked produce
             modalRecipeGrid.innerHTML = "<p>Loading recipes...</p>";
-            await fetchIngredients([produceName], modalRecipeGrid);
+            await fetchIngredients([produceName], modalRecipeGrid, true);
         });
     
 
