@@ -44,18 +44,18 @@ recipeModal.addEventListener("click", (e) => {
 });
 
 
-async function fetchIngredients(produceArr, targetContainer) {
-
+async function fetchIngredients(produceArr, targetContainer, modal = false) {
+  
     produceContainer.innerHTML ="";
     updateProduceCount(produceArr.length)
-    
+  
     if (!targetContainer) targetContainer = document.getElementById("pageRecipeGrid");
     console.log('container got');
     
-    // display produce cards
-    displayProduceCards(produceArr);
-    
-    
+    // First: display produce cards
+    if (!modal) {
+        displayProduceCards(produceArr);
+    }
 
     try {
         /* fetch produce and output cards */
@@ -186,7 +186,7 @@ async function displayProduceCards(produceArr) {
             const card = e.target.closest(".produce-card");
             if (!card) return; // not a produce card
 
-            const produceName = card.dataset.title;
+            const produceName = toTitleCase(card.dataset.title);
             const img = card.dataset.image;
 
             modalTitle.textContent = produceName;
@@ -197,7 +197,7 @@ async function displayProduceCards(produceArr) {
 
             // load recipes into modal grid for the clicked produce
             modalRecipeGrid.innerHTML = "<p>Loading recipes...</p>";
-            await fetchRecipesForOneProduce(produceName, modalRecipeGrid);
+            await fetchRecipesForOneProduce(produceName, modalRecipeGrid, true);
 
             const countEl = document.getElementById("modalRecipeCount");
             if (countEl) {
