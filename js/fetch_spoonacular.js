@@ -99,31 +99,67 @@ function displayRecipeCards(cardsData, targetContainer) {
         // Create card elements
         const card = document.createElement("button");
         const recipeImage = document.createElement("img");
-        const recipeTitle = document.createElement("div");
+
+        //info pills for recipe card 
+        const content = document.createElement("div");     
+        const recipeTitle = document.createElement("div"); 
+        const pillRow = document.createElement("div");    
+
+        const timePill = document.createElement("span");   
+        const ingPill = document.createElement("span");    
 
         // Add classes for styling
         card.classList.add("recipe-card");
         recipeImage.classList.add('recipe-image');
         recipeTitle.classList.add("recipe-text");
 
+        //pill layout classes
+        content.classList.add("recipe-content");
+        pillRow.classList.add("recipe-pill-row");
+        timePill.classList.add("recipe-pill");
+        ingPill.classList.add("recipe-pill");
+
         // Set content dynamically
         recipeImage.src = cardData.image;
         recipeImage.alt = cardData.title;
         recipeTitle.textContent = cardData.title;
 
+        //text for pills
+        const minutes = cardData.readyInMinutes;
+        const ingCount = Array.isArray(cardData.extendedIngredients)
+            ? cardData.extendedIngredients.length
+            : 0;
+
+        timePill.textContent = minutes ? `⏱ ${minutes} min` : "⏱ —";
+        ingPill.textContent = ingCount ? `🥬 ${ingCount} ingredients` : "🥬 —";
+
+
         //clickable recipe cards ?        
         card.dataset.title = cardData.title;
         card.dataset.image = cardData.image;
         card.dataset.link = cardData.sourceUrl || cardData.spoonacularSourceUrl || "";
+        card.dataset.id = cardData.id;
+                
+        // title and pills 
+        pillRow.appendChild(timePill);
+        pillRow.appendChild(ingPill);
+        content.appendChild(recipeTitle);
+        content.appendChild(pillRow);
 
+        
         // Append elements to the card, and the card to the container
         card.appendChild(recipeImage);
-        card.appendChild(recipeTitle);
+        card.appendChild(content);
         targetContainer.appendChild(card);
 
         // const link = cardData.sourceUrl || cardData.spoonacularSourceUrl;
         // if (link) {
         card.addEventListener("click", () => window.openRecipeModal(card));
+
+        const recipePill = document.getElementById("recipeCount");
+        if (recipePill) {
+            recipePill.textContent = `${cardsData.length} ${cardsData.length === 1 ? "recipe" : "recipes"}`;
+        }
         //}
     })
 }
