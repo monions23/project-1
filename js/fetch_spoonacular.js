@@ -144,6 +144,7 @@ async function displayProduceCards(produceArr) {
 
         const modalRecipeGrid = document.getElementById("modalRecipeGrid");
 
+
         // CHANGE: handle clicks only inside the produce slider
         slider.addEventListener("click", async (e) => {
             const card = e.target.closest(".produce-card");
@@ -158,9 +159,9 @@ async function displayProduceCards(produceArr) {
 
             modal.showModal();
 
-            // CHANGE: load recipes into modal grid for the clicked produce
-            //modalRecipeGrid.innerHTML = "<p>Loading recipes...</p>";
-            //await fetchIngredients([produceName], modalRecipeGrid);
+            // load recipes into modal grid for the clicked produce
+            modalRecipeGrid.innerHTML = "<p>Loading recipes...</p>";
+            await fetchIngredients([produceName], modalRecipeGrid);
         });
     
 
@@ -251,7 +252,48 @@ function displayRecipeCards(cardsData, targetContainer) {
         }
         //}
     })
+
+    const cardWidth = document.querySelector(".produce-card").offsetWidth + 16; // Include margin
+
+
+    const modalRecipeGrid = document.getElementById("modalRecipeGrid");
 }
+
+// ===== RECIPE MODAL (NEW) =====
+    const recipeModal = document.getElementById("recipeModal");
+    const recipeModalImage = document.getElementById("recipeModalImage");
+    const recipeModalTitle = document.getElementById("recipeModalTitle");
+    const recipeModalLink = document.getElementById("recipeModalLink");
+    const recipeModalClose = document.querySelector(".recipe-modal-close");
+
+    // Global so fetch_spoonacular.js can call it
+    window.openRecipeModal = function (recipeCardEl) {
+      const title = recipeCardEl.dataset.title || "Recipe";
+      const image = recipeCardEl.dataset.image || "";
+      const link = recipeCardEl.dataset.link || "#";
+
+      recipeModalTitle.textContent = title;
+      recipeModalImage.src = image;
+      recipeModalImage.alt = title;
+
+      recipeModalLink.href = link;
+      recipeModalLink.style.display = link && link !== "#" ? "inline-block" : "none";
+
+      recipeModal.showModal();
+    };
+
+    recipeModalClose.addEventListener("click", () => recipeModal.close());
+
+    recipeModal.addEventListener("click", (e) => {
+      const rect = recipeModal.getBoundingClientRect();
+      const inside =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+
+      if (!inside) recipeModal.close();
+});
 
 /* Title case function */
 function toTitleCase(str) {
