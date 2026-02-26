@@ -12,7 +12,7 @@ fetch("data.json")
 
 function selectProduce() {
 
-  // CHANGE: only remove produce cards in the slider
+  // Reset produce cards and recipe cards upon each load
   document.querySelectorAll(".recipe-card").forEach(card => card.remove());
   document.querySelectorAll(".produce-card").forEach(card => card.remove());
 
